@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import  Navbar from "@/components/Navbar";
+// import  Navbar2 from "@/components/Navbar2";
 import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Lama Dev Social Media App",
+  title: "MB Social Media App",
   description: "Social media app built with Next.js",
 };
 
