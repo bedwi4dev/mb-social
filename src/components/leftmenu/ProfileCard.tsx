@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const ProfileCard = async () => {
   const { userId } = auth();
-
+    console.log("userId data : ", userId);
    if (!userId) return null;
 
   const user = await prisma.user.findFirst({
@@ -20,7 +20,8 @@ const ProfileCard = async () => {
       },
     },
   });
-
+  // console.log(user ? "no user returned" : `${user.username}`)
+  console.log("user data :" , user)
   if (!user) return null;
 
   return (
@@ -79,8 +80,8 @@ const ProfileCard = async () => {
            
           </span>
         </div>
-        {/* <Link href={`/profile/${user.username}`}> */}
-        <Link href="/profile/123">
+        <Link href={`/profile/${user.username}`}>
+        {/* <Link href="/profile/123"> */}
           <button className="bg-blue-500 text-white text-xs p-2 rounded-md">
             My Profile
           </button>

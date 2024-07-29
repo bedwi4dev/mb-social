@@ -23,9 +23,10 @@ const Post = () => {
       <div className="flex flex-col gap-4">
         <div className="w-full min-h-96 relative">
           <Image
-            src="/comment3.jpeg
-            "
+            src="/comment3.jpeg"
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority= {false}
             alt=""
             className="rounded-md object-cover"
           />

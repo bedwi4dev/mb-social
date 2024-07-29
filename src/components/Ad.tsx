@@ -21,6 +21,7 @@ const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
             src="https://images.pexels.com/photos/23193135/pexels-photo-23193135.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load"
             alt=""
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-lg object-cover"
           />
         </div>
