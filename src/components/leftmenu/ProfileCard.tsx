@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const ProfileCard = async () => {
   const { userId } = auth();
-    console.log("userId data : ", userId);
+    // console.log("userId data in ProfileCard comp : ", userId);
    if (!userId) return null;
 
   const user = await prisma.user.findFirst({
@@ -21,7 +21,7 @@ const ProfileCard = async () => {
     },
   });
   // console.log(user ? "no user returned" : `${user.username}`)
-  console.log("user data :" , user)
+  // console.log("user id data in ProfileCard comp :" , user )
   if (!user) return null;
 
   return (
@@ -49,7 +49,7 @@ const ProfileCard = async () => {
           {user.name && user.surname
             ? user.name + " " + user.surname
             : user.username}
-          {/* Mo Badawi */}
+         
         </span>
         <div className="flex items-center gap-4">
           <div className="flex">
@@ -81,7 +81,6 @@ const ProfileCard = async () => {
           </span>
         </div>
         <Link href={`/profile/${user.username}`}>
-        {/* <Link href="/profile/123"> */}
           <button className="bg-blue-500 text-white text-xs p-2 rounded-md">
             My Profile
           </button>

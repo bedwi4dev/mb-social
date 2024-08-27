@@ -158,7 +158,11 @@ export const updateProfile = async (
   payload: { formData: FormData; cover: string }
 ) => {
   const { formData, cover } = payload;
-  const fields = Object.fromEntries(formData);
+  const fields = Object.fromEntries(formData);  // get the names of the form fields
+
+  // console.log("fields of form", Object.fromEntries(formData));
+  // console.log("formdata of form", formData);
+  // console.log("payload : ", payload.formData);
 
   const filteredFields = Object.fromEntries(
     Object.entries(fields).filter(([_, value]) => value !== "")
@@ -166,7 +170,7 @@ export const updateProfile = async (
 
   const Profile = z.object({
     cover: z.string().optional(),
-    name: z.string().max(60).optional(),
+    name: z.string().min(2).max(60).optional(),
     surname: z.string().max(60).optional(),
     description: z.string().max(255).optional(),
     city: z.string().max(60).optional(),
@@ -174,11 +178,13 @@ export const updateProfile = async (
     work: z.string().max(60).optional(),
     website: z.string().max(60).optional(),
   });
-
+    // console.log("Profile : ",filteredFields);
   const validatedFields = Profile.safeParse({ cover, ...filteredFields });
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error.flatten().fieldErrors);
+
+    // console.log(validatedFields.error.flatten().fieldErrors);
+
     return { success: false, error: true };
   }
 
@@ -195,6 +201,8 @@ export const updateProfile = async (
       },
       data: validatedFields.data,
     });
+
+    console.log("validated fields : ", validatedFields.data)
     return { success: true, error: false };
   } catch (err) {
     console.log(err);

@@ -4,8 +4,10 @@ import { User } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/client";
 import UserInfoCardInteraction from "./UserInfoCardInteraction";
+import UpdateUser from "./UpdateUser";
 
 const UserInfoCard = async ({ user }: { user: User }) => {
+ 
   const createdAtDate = new Date(user.createdAt);
 
   const formattedDate = createdAtDate.toLocaleDateString("en-US", {
@@ -19,6 +21,16 @@ const UserInfoCard = async ({ user }: { user: User }) => {
   let isFollowingSent = false;
 
   const { userId: currentUserId } = auth();
+  // console.log("userId data form auth() in UserInfoCard comp :" , currentUserId )
+
+//   auth() is presumably a function that returns an object.
+// The object returned by auth() has a property called userId.
+// The code destructures this object and extracts the userId property.
+// userId is then renamed to currentUserId in the context of this code.
+// So if auth() returns { userId: 12345, otherProp: 'value' }, the result of this code would be that currentUserId is assigned the value 12345.
+
+// Essentially, this line of code is a concise way to extract the userId from the object returned by auth() and assign it to a variable named currentUserId.
+
 
   if (currentUserId) {
     const blockRes = await prisma.block.findFirst({
@@ -46,71 +58,70 @@ const UserInfoCard = async ({ user }: { user: User }) => {
 
     followReqRes ? (isFollowingSent = true) : (isFollowingSent = false);
   }
-
+  // console.log("user id data in UserInfoCard comp :" , user )
   return (
-    <div className=" bg-white w-full shadow-md rounded-lg py-4 gap-2">
-      {/* FriendRequests */}
-      {/* Header */}
-      <div className="flex items-center justify-between mx-2 text-sm ">
-        <span className="text-gray-500"> User Information </span>
-        <Link href="/" className="text-blue-500 text-xs cursor-pointer">
-          See all
-        </Link>
+    <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
+      {/* TOP */}
+      <div className="flex justify-between items-center font-medium">
+        <span className="text-gray-500">User Information</span>
+        {currentUserId === user.id ? (
+          <UpdateUser user={user}/>
+        ) : (
+          <Link href="/" className="text-blue-500 text-xs">
+            See all
+          </Link>
+        )}
       </div>
-      <div className="userInfo flex flex-col mx-2 mt-2 gap-3 ">
-        {/* NAME */}
-        <div className="flex-col items-center gap-2">
-          <span className="font-bold ">
+      {/* BOTTOM */}
+      <div className="flex flex-col gap-4 text-gray-500">
+        <div className="flex items-center gap-2">
+          <span className="text-xl text-black">
             {" "}
             {user.name && user.surname
               ? user.name + " " + user.surname
-              : user.username}{" "}
+              : user.username}
           </span>
-          <span className="text-sm"> @{user.username} </span>
+          <span className="text-sm">@{user.username}</span>
         </div>
         {user.description && <p>{user.description}</p>}
-
-        {/* DETAILS */}
-
-        {/* LIVING */}
         {user.city && (
-          <div className="flex gap-2 items-center">
-            <Image src="/map.png" alt="" width={12} height={12} />
-            <span className="text-gray-500"> Living in </span>
-            <span className="text-gray-700 font-semibold"> {user.city} </span>
+          <div className="flex items-center gap-2">
+            <Image src="/map.png" alt="" width={16} height={16} />
+            <span>
+              Living in <b>{user.city}</b>
+            </span>
           </div>
         )}
-        {/* SCHOOL  */}
         {user.school && (
-          <div className="flex gap-2 items-center">
-            <Image src="/school.png" alt="" width={12} height={12} />
-
-            <span className="text-gray-500"> Went to </span>
-            <span className="text-gray-700 font-semibold">{user.school}</span>
+          <div className="flex items-center gap-2">
+            <Image src="/school.png" alt="" width={16} height={16} />
+            <span>
+              Went to <b>{user.school}</b>
+            </span>
           </div>
         )}
-        {/* WORK  */}
         {user.work && (
-          <div className="flex gap-2 items-center">
-            <Image src="/work.png" alt="" width={12} height={12} />
-            <span className="text-gray-500"> Works at </span>
-            <span className="text-gray-700 font-semibold"> {user.work} </span>
+          <div className="flex items-center gap-2">
+            <Image src="/work.png" alt="" width={16} height={16} />
+            <span>
+              Works at <b>{user.work}</b>
+            </span>
           </div>
         )}
-        {/* LINK  */}
-        <div className="flex gap-2 text-sm items-center justify-between">
-          <div className="flex gap-2 text-sm items-center">
-            <Image src="/link.png" alt="" width={12} height={12} />
-            <Link href={user.website} className="text-blue-500 font-medium">
-              {user.website}
-            </Link>
-          </div>
-          <div className="flex gap-2 text-sm items-center">
-            <Image src="/addevent.png" alt="" width={12} height={12} />
-            <span className="text-gray-500"> Joined {formattedDate}</span>
+        <div className="flex items-center justify-between">
+          {user.website && (
+            <div className="flex gap-1 items-center">
+              <Image src="/link.png" alt="" width={16} height={16} />
+              <Link href={user.website} className="text-blue-500 font-medium">
+                {user.website}
+              </Link>
+            </div>
+          )}
+          <div className="flex gap-1 items-center">
+            <Image src="/date.png" alt="" width={16} height={16} />
+            <span>Joined {formattedDate}</span>
           </div>
         </div>
-        
         {currentUserId && currentUserId !== user.id && (
           <UserInfoCardInteraction
             userId={user.id}

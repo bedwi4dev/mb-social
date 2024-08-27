@@ -54,6 +54,8 @@ export async function POST(req: Request) {
 //   console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
 //  console.log('Webhook body:', body)
 
+// CREATE use
+
 if (eventType === "user.created") {
     try {
       await prisma.user.create({
@@ -70,6 +72,8 @@ if (eventType === "user.created") {
       return new Response("Failed to create the user!", { status: 500 });
     }
   }
+  // UPDATE user
+
   if (eventType === "user.updated") {
     try {
       await prisma.user.update({

@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 
 const ProfilePage = async ({ params }: { params: { username: string } }) => {
   const username = params.username;
-
+  //  console.log("Display username from Profile Comp : ",username);
   const user = await prisma.user.findFirst({
     where: {
       username,        // it acn be -> username: username,
@@ -23,10 +23,12 @@ const ProfilePage = async ({ params }: { params: { username: string } }) => {
       },
     },
   });
-
-  if (!user) return notFound();
-
+  // console.log("user data in Profile Comp : ", user);
+  // if (!user) return notFound();
+  if (!user) { notFound() }
+  
   const { userId: currentUserId } = auth();
+  // console.log("user  data in Profile page comp :" , user, "CURRENTUSER :", currentUserId);
 
   let isBlocked;
 

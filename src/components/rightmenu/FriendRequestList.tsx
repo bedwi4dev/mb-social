@@ -1,36 +1,81 @@
-import Image from "next/image";
+"use client";
 
-const FriendRequestList = () => {
+import  {acceptFollowRequest, declineFollowRequest} from "@/lib/actions"
+import Image from "next/image";
+import { FollowRequest, User } from "@prisma/client";
+import { useOptimistic, useState } from "react";
+
+type RequestWithUser = FollowRequest & {
+  sender: User;
+};
+
+const FriendRequestList = ({ requests }: { requests: RequestWithUser[] }) => {
+  const [requestState,setRequestState] = useState(requests);
+
+  const accept = async (requestId:number, userId:string) => {
+    removeOptimisticRequest(requestId)
+    try {
+      await acceptFollowRequest(userId)
+      setRequestState((prev) =>
+        prev.filter((req) => req.id !== requestId));
+    } catch (error) {}
+  };
+  const decline = async (requestId:number, userId:string) => {
+    removeOptimisticRequest(requestId)
+    try {
+      await declineFollowRequest(userId)
+      setRequestState((prev) =>
+        prev.filter((req) => req.id !== requestId));
+    } catch (error) {}
+  };
+
+  const [optimisticRequests, removeOptimisticRequest] = useOptimistic(
+    requestState,(state,value:number)=>state.filter((req)=>req.id !== value))
   return (
-    <div className="flex mx-2 items-center justify-between">
-      
-        <div className="left-grp flex gap-2 items-center">
-          <Image
-            src="/friend1.jpeg"
-            width={20}
-            height={20}
-            alt=""
-            className="w-10 h-10 rounded-full"
-          />
-          <span className="text-sm font-bold">John Smith</span>
-        </div>
-        <div className="right-grp flex gap-2">
-        <Image
+    <div className="">
+      {optimisticRequests.map((request) => (
+        <div
+          className="flex mx-2 items-center justify-between"
+          key={request.id}
+        >
+          <div className="left-grp flex gap-2 items-center">
+            <Image
+              src={request.sender.avatar || "/noAvatar.png"}
+              width={20}
+              height={20}
+              alt=""
+              className="w-10 h-10 rounded-full"
+            />
+            <span className="text-sm font-semibold">{request.sender.name && request.sender.surname
+                ? request.sender.name + " " + request.sender.surname
+                : request.sender.username}</span>
+          </div>
+          <div className="right-grp flex gap-2">
+            <form action={()=> accept(request.id, request.sender.id)}>
+              <button>
+                <Image
               src="/accept.png"
               width={16}
               height={16}
               alt=""
               className="cursor-pointer"
             />
-        <Image
-              src="/reject.png"
-              width={16}
-              height={16}
-              alt=""
-              className="cursor-pointer"
-            />
+              </button>
+            </form>
+            <form action={() => decline(request.id, request.sender.id)}>
+              <button>
+                <Image
+                  src="/reject.png"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="cursor-pointer"
+                />
+              </button>
+            </form>
+          </div>
         </div>
-      
+      ))}
     </div>
   );
 };

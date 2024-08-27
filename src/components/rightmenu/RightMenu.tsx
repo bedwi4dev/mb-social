@@ -7,6 +7,7 @@ import { User } from "@prisma/client";
 import { Suspense } from "react";
 // const RightMenu = ({userId}: {userId?: string}) => {
 const RightMenu = ({ user }: { user?: User }) => {
+  // console.log("user  data in RightMenu comp :" , user )
   return (
     <div className="flex flex-col gap-6">
       {user ? (

@@ -3,8 +3,10 @@ import Stories from "@/components/Stories";
 import Feed from "@/components/feed/Feed";
 import LeftMenu from "@/components/leftmenu/LeftMenu";
 import RightMenu from "@/components/rightmenu/RightMenu";
+// import { User } from "@prisma/client";
 
 const Homepage = () => {
+
   return (
     <div className="flex gap-6 pt-6 ">
       <div className="hidden xl:block w-[20%] ">

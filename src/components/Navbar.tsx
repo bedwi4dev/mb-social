@@ -65,10 +65,10 @@ const Navbar = () => {
           <Image src="/search.png" alt="" width={14} height={14} className="cursor-pointer" />
         </div>
         {/* Internet*/}
-        <div className="internet flex ml-2" >
+        {/* <div className="internet flex ml-2" >
           <span> Internet: </span>
           <span className="ml-2 font-bold text-red-500"> <Internet /> </span>
-        </div>
+        </div> */}
       </div>
       <div className="hidden md:block w-[20%]"></div>
       {/* RIGHT */}

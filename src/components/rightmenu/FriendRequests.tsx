@@ -1,6 +1,23 @@
 import FriendRequestList from "./FriendRequestList"
 import Link from "next/link"
-const FriendRequests = () => {
+import { auth } from "@clerk/nextjs/server"
+import prisma from "@/lib/client"
+
+const FriendRequests = async () => {
+
+    const {userId} = auth()
+    if(!userId) return null;
+
+  const requests = await prisma.followRequest.findMany({
+      where: {
+        receiverId: userId, 
+      },
+      include:{
+        sender: true,
+      },
+  })
+
+  if (requests.length === 0) return null; 
   return (
 
     <div className=' bg-white w-full shadow-md rounded-lg py-4'>
@@ -13,8 +30,8 @@ const FriendRequests = () => {
         </div>
         {/* FR List */}
         <div className='flex flex-col gap-2 px-2 mt-4'>
-            <FriendRequestList />
-            <FriendRequestList />
+            <FriendRequestList requests = {requests}/>
+            {/* <FriendRequestList /> */}
             
         </div>
     </div>
